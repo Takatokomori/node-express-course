@@ -2,17 +2,26 @@ const express = require("express")
 const app = express()
 const { products, people } = require("./data")
 const logger = require("./logger")
+const authorize = require("./authorized")
 
 console.log('Express Tutorial')
-app.use(logger)
+// where do you want to apply 
+// app.use("/api", logger)
+// app.use([ logger, authorize ])
+app.use([ logger ])
 
 app.get("/", (req, res)=>{
   //res.json(people)
   //res.json(products)
-  res.send("<h1>Hello</h1><a href='/api/produts'>Products</a>")
+  res.send("<h1>Hello</h1><a href='/api/products'>Products</a>")
 })
 
-app.get("/api/products", (req, res)=>{
+app.get("/api/about", (req, res)=>{
+  console.log(req.user)
+  res.send(`Hello it's About Page ${req.user}`)
+})
+
+app.get("/api/products", authorize, (req, res)=>{
   const newProducts = products.map((product)=>{
     const {id, name, image} = product;
     return {id, name, image}
