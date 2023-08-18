@@ -31,9 +31,9 @@ app.get("/api/v1/query", (req, res)=>{
     sortedProducts = sortedProducts.slice(0, Number(limit))
   }
   if(sortedProducts.length < 1){
-    res.status(200).send("No product found")
+    return res.status(200).send("No product found")
   }
-  res.status(200).json(sortedProducts)
+  return res.status(200).json(sortedProducts)
 })
 
 app.get("/api/products/:productId", (req, res)=>{
