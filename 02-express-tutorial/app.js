@@ -3,12 +3,14 @@ const app = express()
 const { products, people } = require("./data")
 const logger = require("./logger")
 const authorize = require("./authorized")
+const morgan = require("morgan")
+
 
 console.log('Express Tutorial')
 // where do you want to apply 
 // app.use("/api", logger)
 // app.use([ logger, authorize ])
-app.use([ logger ])
+app.use([ morgan("tiny") ])
 
 app.get("/", (req, res)=>{
   //res.json(people)
@@ -18,7 +20,7 @@ app.get("/", (req, res)=>{
 
 app.get("/api/about", (req, res)=>{
   console.log(req.user)
-  res.send(`Hello it's About Page ${req.user}`)
+  res.send(`Hello it's About Page`)
 })
 
 app.get("/api/products", authorize, (req, res)=>{
