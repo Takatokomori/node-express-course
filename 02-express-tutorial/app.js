@@ -1,7 +1,10 @@
-console.log('Express Tutorial')
 const express = require("express")
 const app = express()
 const { products, people } = require("./data")
+const logger = require("./logger")
+
+console.log('Express Tutorial')
+app.use(logger)
 
 app.get("/", (req, res)=>{
   //res.json(people)
