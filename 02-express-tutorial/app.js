@@ -1,28 +1,37 @@
 console.log('Express Tutorial')
 const express = require("express")
 const app = express()
-const path = require("path")
+const { products, people } = require("./data")
 
-// set up static middleware
-app.use(express.static("./public"))
-
-// app.get("/", (req, res)=>{
-//   res.sendFile(path.resolve(__dirname, "./navbar-app/index.html"))
-// })
-
-app.get("*", (req, res)=>{
-  res.status(404).send("resource not found")
+app.get("/", (req, res)=>{
+  //res.json(people)
+  //res.json(products)
+  res.send("<h1>Hello</h1><a href='/api/produts'>Products</a>")
 })
 
-app.listen(5000, ()=>{
-  console.log("server is listening on port 5000")
+app.get("/api/products", (req, res)=>{
+  const newProducts = products.map((product)=>{
+    const {id, name, image} = product;
+    return {id, name, image}
+  })
+  res.json(newProducts)
 })
 
 
-// app.get
-// app.post
-// app.post
-// app.put
-// app.delete
-// app.all
-// app.listen
+app.get("/api/products/:productId", (req, res)=>{
+  console.log(req.params)
+  const { productId } = req.params
+  const singleProduct = products.find((product)=>product.id === Number( productId) )
+  if(!singleProduct){
+    return res.status(404).end('Product not Found')
+  }
+  res.json(singleProduct)
+})
+
+app.get("*", ( req,res )=>{
+  res.status(404).end("No resource")
+})
+
+app.listen(5000, (req, res)=>{
+  console.log("User hitting the server")
+})
