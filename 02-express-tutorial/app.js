@@ -81,7 +81,9 @@ app.delete("/api/people/:id", (req, res)=>{
     return res.status(404).json({status: false, msg:"No person exist"})
   }
 
-  res.status(200).json({status:true, msg:`Delete successfully with id = ${req.params.id}`})
+  const newPeople = people.filter((person)=> person.id !== Number(req.params.id))
+
+  res.status(200).json({status:true, msg:`Delete successfully with id = ${req.params.id}`, peopole: newPeople})
 
 })
 
