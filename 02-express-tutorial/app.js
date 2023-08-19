@@ -1,6 +1,6 @@
 const express = require("express")
 const app = express()
-const { products, people } = require("./data")
+let { products, people } = require("./data")
 const logger = require("./logger")
 const authorize = require("./authorized")
 const morgan = require("morgan")
@@ -10,13 +10,49 @@ console.log('Express Tutorial')
 // where do you want to apply 
 // app.use("/api", logger)
 // app.use([ logger, authorize ])
-app.use([ morgan("tiny") ])
+app.use([
+  morgan("tiny"),
+  express.static("./methods-public")
+])
 
-app.get("/", (req, res)=>{
-  //res.json(people)
-  //res.json(products)
-  res.send("<h1>Hello</h1><a href='/api/products'>Products</a>")
+// parse 
+app.use(express.urlencoded({extended: false}))
+app.use(express.json())
+
+
+// insert method
+app.post("/login", (req, res)=>{
+  const { name } = req.body
+  if(name){
+    return res.status(200).send(`Hello ${name}`)
+  }
+  res.status(401).send("Please Provide Info")
 })
+
+
+// insert method
+app.post("/api/postman/people", (req, res)=>{
+  const { name } = req.body
+  if(name){
+    return res.status(200).json({success: true, name: name})
+  }
+  return res.status(200).json({success: false, msg:"Please Provide Info"})
+})
+
+app.get("/api/people", (req, res)=>{
+  res.status(200).json({ data:people })
+})
+
+
+// insert method
+app.post("/api/people", (req, res)=>{
+  const { name } = req.body
+  if(name){
+    return res.status(201).json({ sucess: true, person: name })
+  }
+  res.status(401).json({ success: false, msg:"Please Provide Info" })
+})
+
 
 app.get("/api/about", (req, res)=>{
   console.log(req.user)
