@@ -73,6 +73,18 @@ app.put("/api/people/:id", (req, res)=>{
   res.status(200).json({status: true, data: newName })
 })
 
+// delete method
+app.delete("/api/people/:id", (req, res)=>{
+  const person = people.find((person)=> person.id === Number(req.params.id))
+
+  if(!person){
+    return res.status(404).json({status: false, msg:"No person exist"})
+  }
+
+  res.status(200).json({status:true, msg:`Delete successfully with id = ${req.params.id}`})
+
+})
+
 app.get("/api/about", (req, res)=>{
   console.log(req.user)
   res.send(`Hello it's About Page`)
