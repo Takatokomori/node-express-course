@@ -1,67 +1,32 @@
 const express = require("express")
 const app = express()
-const { products, people } = require("./data")
-const logger = require("./logger")
-const authorize = require("./authorized")
 const morgan = require("morgan")
 
+const people = require("./routes/people")
+const auth = require("./routes/auth")
+const product = require("./routes/product")
+const about = require("./routes/about")
+const query = require("./routes/query")
 
-console.log('Express Tutorial')
 // where do you want to apply 
+app.use([
+  morgan("tiny"),
+  express.static("./methods-public"),
+  express.urlencoded({extended: false}),
+  express.json()
+])
 // app.use("/api", logger)
-// app.use([ logger, authorize ])
-app.use([ morgan("tiny") ])
 
-app.get("/", (req, res)=>{
-  //res.json(people)
-  //res.json(products)
-  res.send("<h1>Hello</h1><a href='/api/products'>Products</a>")
-})
+// import routes
+app.use("/api/people", people)
+app.use("/login", auth)
+app.use("/api/products", product)
+app.use("/about", about)
+app.use("/query", query)
 
-app.get("/api/about", (req, res)=>{
-  console.log(req.user)
-  res.send(`Hello it's About Page`)
-})
-
-app.get("/api/products", authorize, (req, res)=>{
-  const newProducts = products.map((product)=>{
-    const {id, name, image} = product;
-    return {id, name, image}
-  })
-  res.json(newProducts)
-})
-
-app.get("/api/v1/query", (req, res)=>{
-  console.log(req.query)
-  
-  const {search, limit} = req.query
-  let sortedProducts = [...products]
-  if(search){
-    sortedProducts = sortedProducts.filter((product)=>{
-      return product.name.startsWith(search)
-    })
-  }
-  if(limit){
-    sortedProducts = sortedProducts.slice(0, Number(limit))
-  }
-  if(sortedProducts.length < 1){
-    return res.status(200).send("No product found")
-  }
-  return res.status(200).json(sortedProducts)
-})
-
-app.get("/api/products/:productId", (req, res)=>{
-  console.log(req.params)
-  const { productId } = req.params
-  const singleProduct = products.find((product)=>product.id === Number( productId) )
-  if(!singleProduct){
-    return res.status(404).end('Product not Found')
-  }
-  res.json(singleProduct)
-})
-
-app.get("*", ( req,res )=>{
-  res.status(404).end("No resource")
+// Not Found
+app.get("*", (req, res)=>{
+  res.status(404).send("Page Not Found")
 })
 
 app.listen(5000, (req, res)=>{
