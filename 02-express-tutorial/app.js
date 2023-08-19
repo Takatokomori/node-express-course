@@ -53,6 +53,25 @@ app.post("/api/people", (req, res)=>{
   res.status(401).json({ success: false, msg:"Please Provide Info" })
 })
 
+// put method
+app.put("/api/people/:id", (req, res)=>{
+  const {id} = req.params
+  const { name } = req.body
+  const person = people.find((person)=> person.id === Number(id))
+  
+  if(!person){
+    return res.status(404).json({status: false, msg: "No person with this id"})
+  }
+  
+  const newName = people.map((person)=>{
+    if(person.id === Number(id)){
+      person.name = name
+    }
+    return person
+  })
+
+  res.status(200).json({status: true, data: newName })
+})
 
 app.get("/api/about", (req, res)=>{
   console.log(req.user)
