@@ -17,7 +17,6 @@ app.use([
 ])
 // app.use("/api", logger)
 
-
 // import routes
 app.use("/api/people", people)
 app.use("/login", auth)
