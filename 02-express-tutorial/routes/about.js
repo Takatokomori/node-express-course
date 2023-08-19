@@ -1,14 +1,13 @@
 const express = require("express")
 const router = express.Router()
 const authorize = require("../authorized")
+const {getAuthorize} = require("../controllers/about")
 
-//router.use([ authorize ])
+/*
+* url: /about
+*/
+router.use([ authorize ])
 
-router.get("/",authorize, (req, res)=>{
-  const user = req.user.name
-  console.log(user)
-
-  res.status(200).send(`Hello ${user}`)
-})
+router.get("/",getAuthorize)
 
 module.exports = router

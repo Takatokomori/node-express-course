@@ -1,5 +1,4 @@
 const express = require("express")
-// const app = express()
 const router = express.Router()
 const {
   getPeople,
@@ -29,7 +28,7 @@ router.post("/postman", createPersonPostman)
 
 // put method
 router.put("/:id", updatePerson)
-  
+
 // delete method
 router.delete("/:id", deletePerson)
 
@@ -37,6 +36,6 @@ router.delete("/:id", deletePerson)
 // alternative way
 // router.route("/").get(getPeople).post(createPerson)
 // router.route("/postman").post(createPersonPostman)
-// router.route("/:id").put(updatePerson).delete(deletePerson)
+// router.route("/:id").get(getPerson).put(updatePerson).delete(deletePerson)
 
 module.exports = router
